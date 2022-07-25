@@ -194,8 +194,9 @@ import fetch from "node-fetch";
 // Day 3:
 // const express = require("express"); // q. why not working?
 import express from "express";
+import e from "express";
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
@@ -218,10 +219,131 @@ const fetchUsers = async () => {
 app.get("/users", async (req, res) => {
   const fetchedUsers = await fetchUsers();
   if (fetchedUsers) {
-    res.status(200).send({ fetchedUsers });
+    let zipcode = req.query.zip;
+    if (!zipcode) {
+      res.status(200).send(fetchedUsers);
+    }
+    const filteredUsers = fetchedUsers.filter((iter) => {
+      return iter.address.zipcode === zipcode;
+    });
+    if (filteredUsers === undefined || filteredUsers.length == 0) {
+      res.status(404).send("User with given zipcode not found!");
+    }
+    res.status(200).send(filteredUsers);
   } else {
+    res.status(500).send("Internal Server Error");
   }
 });
+
+app.get("/posts", async (req, res) => {
+  try {
+    let data = await fetch("https://jsonplaceholder.typicode.com/posts");
+    let result = await data.json();
+    // let arr = [];
+    // arr.push(result);
+
+    let id = req.query.user;
+    id = Number(id);
+    if (id) {
+      let count = 0;
+      let last = 0;
+      let start = 0;
+      result.forEach((item, index, arr) => {
+        if (arr[index].userId === id) {
+          last = index;
+          count++;
+        }
+      });
+      start = last - count + 1;
+      result.splice(start, count);
+      return res.status(200).send(result);
+    }
+
+    let title = req.query.title;
+    let body = req.query.body;
+    let sort = req.query.sort;
+    sort = Number(sort);
+
+    if (!title && !body) {
+      res.status(200).send(result);
+    }
+
+    let filteredPosts = result.filter((iter) => {
+      return iter.title === title || iter.body === body;
+    });
+    if (filteredPosts.length === 0) {
+      filteredPosts = [...result];
+    }
+    if (!sort) {
+      res.status(200).send(filteredPosts);
+    }
+    if (sort === 1 && !title && body) {
+      filteredPosts.sort((a, b) =>
+        a.body > b.body ? 1 : b.body > a.body ? -1 : 0
+      );
+    } else if (sort === 1 && title && !body) {
+      filteredPosts.sort((a, b) =>
+        a.title > b.title ? 1 : b.title > a.title ? -1 : 0
+      );
+    } else if (sort === 1 && title && body) {
+      filteredPosts.sort((a, b) => {
+        if (a.title == b.title) {
+          return a.body < b.body ? -1 : a.body > b.body ? 1 : 0;
+        } else {
+          return a.title < b.title ? -1 : 1;
+        }
+      });
+    }
+
+    res.status(200).send(filteredPosts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/posts/:id/comments", async (req, res) => {
+  try {
+    let commentsData = await fetch(
+      "https://jsonplaceholder.typicode.com/comments"
+    );
+    let allComments = await commentsData.json();
+
+    let id = req.params.id;
+    id = Number(id);
+    let relComms = await fetch(
+      `https://jsonplaceholder.typicode.com/posts/${id}/comments`
+    );
+    let relevantComments = await relComms.json();
+
+    let posts = await fetch("https://jsonplaceholder.typicode.com/posts");
+    let allPosts = await posts.json();
+
+    allPosts[id - 1]["comments"] = relevantComments;
+
+    res.status(200).send(allPosts);
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// app.delete("/post", async (req, res) => {
+//   try {
+//     let id = query.params.user;
+//     id = Number(id);
+//     let postsData = await "https://jsonplaceholder.typicode.com/posts";
+//     let posts = await postsData.json();
+
+//     posts.foreach((iter) => {
+//       if (iter.userId === id) {
+//         posts.iter.pop();
+//       }
+//       res.status(200).send(posts);
+//     });
+//   } catch (err) {
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 // --------practice:
 
