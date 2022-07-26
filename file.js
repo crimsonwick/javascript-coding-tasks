@@ -194,7 +194,6 @@ import fetch from "node-fetch";
 // Day 3:
 // const express = require("express"); // q. why not working?
 import express from "express";
-import e from "express";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -239,43 +238,39 @@ app.get("/posts", async (req, res) => {
   try {
     let data = await fetch("https://jsonplaceholder.typicode.com/posts");
     let result = await data.json();
-    // let arr = [];
-    // arr.push(result);
 
+    //delete url?users=*
     let id = req.query.user;
     id = Number(id);
     if (id) {
-      let count = 0;
-      let last = 0;
-      let start = 0;
-      result.forEach((item, index, arr) => {
-        if (arr[index].userId === id) {
-          last = index;
-          count++;
-        }
+      const filtered = result.filter((item) => {
+        return item.userId !== id;
       });
-      start = last - count + 1;
-      result.splice(start, count);
+      console.log(filtered);
+      return res.status(200).send(filtered);
+    }
+
+    //searching url?body=*&title=*
+    let title = req.query.title;
+    let body = req.query.body;
+
+    if (!title && !body) {
       return res.status(200).send(result);
     }
 
-    let title = req.query.title;
-    let body = req.query.body;
+    let filteredPosts = result.filter((iter) => {
+      return iter.title.includes(title) || iter.body.includes(body);
+    });
+
+    //sorting url?sort=1
     let sort = req.query.sort;
     sort = Number(sort);
 
-    if (!title && !body) {
-      res.status(200).send(result);
-    }
-
-    let filteredPosts = result.filter((iter) => {
-      return iter.title === title || iter.body === body;
-    });
     if (filteredPosts.length === 0) {
       filteredPosts = [...result];
     }
     if (!sort) {
-      res.status(200).send(filteredPosts);
+      return res.status(200).send(filteredPosts);
     }
     if (sort === 1 && !title && body) {
       filteredPosts.sort((a, b) =>
@@ -304,10 +299,10 @@ app.get("/posts", async (req, res) => {
 
 app.get("/posts/:id/comments", async (req, res) => {
   try {
-    let commentsData = await fetch(
-      "https://jsonplaceholder.typicode.com/comments"
-    );
-    let allComments = await commentsData.json();
+    // let commentsData = await fetch(
+    //   "https://jsonplaceholder.typicode.com/comments"
+    // );
+    // let allComments = await commentsData.json();
 
     let id = req.params.id;
     id = Number(id);
