@@ -1,0 +1,156 @@
+//-------------------------
+//day 1 tasks in OOP format:
+class ArrayHelper {
+  constructor(arr) {
+    this.arr = arr;
+  }
+  //counts subarrays
+  countSubarrays = (x) => {
+    let count = 0;
+    for (let i = 0; i < x.length; i++) {
+      x.forEach((element) => {
+        count += element.length;
+      });
+    }
+    return count;
+  };
+  //capitalizes the first value
+  capitalizeMe() {
+    for (var i = 0; i < this.arr.length; i++) {
+      this.arr[i] = this.arr[i][0].toUpperCase() + this.arr[i].slice(1);
+    }
+  }
+  //removes duplicate values
+  removeDuplicates() {
+    const ez = this.arr.filter((item, pos) => {
+      return this.arr.indexOf(item) === pos;
+    });
+    this.arr = [...ez];
+  }
+  //returns an intersection array and a union array
+  intersectionUnion(arrTwo) {
+    const result = [];
+    const intersection = this.arr.filter((value) => arrTwo.includes(value));
+    result.push(intersection);
+    const union = [...new Set([...this.arr, ...arrTwo])];
+    result.push(union);
+    return result;
+  }
+  print() {
+    console.log(this.arr);
+  }
+}
+
+let obj = new ArrayHelper(["John", 1, "ez", 1]);
+obj.print();
+obj.removeDuplicates();
+// obj.print();
+const res = obj.intersectionUnion([1, 2, 3, 4]);
+console.log(res);
+
+//-------------------------
+//day 2 tasks in OOP format:
+
+import fetch from "node-fetch";
+
+//abstract class
+class FetchJsonHelper {
+  constructor() {
+    if (this.constructor === FetchJsonHelper) {
+      throw new Error("Abstract Class can't be instantiated.");
+    }
+  }
+  // inline/private method -> ?
+  fetchByCallback = () => {
+    setTimeout(() => {
+      let contacts = [];
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          contacts = data.map((iter) => {
+            return iter.phone;
+          });
+          console.log("contacts:::", contacts);
+          return contacts;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }, 2000);
+  };
+  fetchByPromise = () => {
+    const promise = fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        let contacts = data.map((iter) => {
+          return iter.phone;
+        });
+        console.log(contacts);
+        return contacts;
+      })
+      .catch((err) => console.log(err));
+    return promise;
+  };
+  async fetchByAsyncAwait() {
+    const data = await fetch("https://jsonplaceholder.typicode.com/users");
+
+    const res = await data.json();
+    const contacts = res.map((iter) => {
+      return iter.phone;
+    });
+    console.log(contacts);
+  }
+}
+
+// let fetchObj = new FetchJsonHelper();
+// objTwo.fetchByCallback();
+// let promise = fetchObj.fetchByPromise();
+// Promise.all([promise]).catch((err) => console.log(err));
+// fetchObj.fetchByAsyncAwait();
+
+//day 3-4 tasks in OOP format
+class JsonManipulation {
+  //constructor
+
+  //methods
+
+  async fetchByAsyncAwait(url) {
+    const data = await fetch(url);
+    const res = await data.json();
+    return res;
+  }
+  filter() {}
+  search() {}
+  sort() {}
+  delete() {}
+}
+
+//multiple inheritance not allowed -> extends JsonManipulation, JsonHelper ?
+class User extends JsonManipulation {
+  constructor(string) {
+    super();
+    this.arr = [];
+    this.setData(string);
+  }
+  //setter
+  async setData(url) {
+    try {
+      const res = await this.fetchByAsyncAwait(url);
+      this._arr = [...res];
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  //getter
+  get getUser() {
+    return this._arr;
+  }
+}
+
+const objThree = new User("https://jsonplaceholder.typicode.com/users");
+console.log(objThree);
+console.log(objThree.getUser);
