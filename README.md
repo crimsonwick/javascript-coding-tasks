@@ -29,18 +29,18 @@ intersectionUnion([1, 1], [1, 1, 1, 1]) ➞ [[1], [1]]
 **ExpressJS based API**  
 Create a simple ExpressJS-based API with the following endpoints:    
 
-*http://localhost:4000/users  
-*http://localhost:4000/comments  
-*http://localhost:4000/posts/:id/comments  
+http://localhost:4000/users  
+http://localhost:4000/comments  
+http://localhost:4000/posts/:id/comments  
 
 External API source:  
-*https://jsonplaceholder.typicode.com/users  
-*https://jsonplaceholder.typicode.com/posts  
-*https://jsonplaceholder.typicode.com/comments  
-*https://jsonplaceholder.typicode.com/posts/:id/comments  
+https://jsonplaceholder.typicode.com/users  
+https://jsonplaceholder.typicode.com/posts  
+https://jsonplaceholder.typicode.com/comments  
+https://jsonplaceholder.typicode.com/posts/:id/comments  
 
 Additional API Endpoints  
-*Create API endpoints to return JSON data from the external API (https://jsonplaceholder.typicode.com/photos) and modify the structure of the output response by embedding comments inside the relevant posts or by embedding posts inside the users.
+Create API endpoints to return JSON data from the external API (https://jsonplaceholder.typicode.com/photos) and modify the structure of the output response by embedding comments inside the relevant posts or by embedding posts inside the users.
 
 Sorting and Delete  
 Implement sorting and delete functionalities:
@@ -58,5 +58,5 @@ Endpoint: http://localhost:4000/posts?user=3
 Output: Link to Screenshot  
 
 **Learning Resources**  
-[*ES6 Quick Guide  ](https://www.tutorialspoint.com/es6/es6_quick_guide.htm)
-[*JavaScript Clean Coding Best Practices - Node.js at Scale  ](https://blog.risingstack.com/javascript-clean-coding-best-practices-node-js-at-scale/)https://blog.risingstack.com/javascript-clean-coding-best-practices-node-js-at-scale/
+[ES6 Quick Guide  ](https://www.tutorialspoint.com/es6/es6_quick_guide.htm)
+[JavaScript Clean Coding Best Practices - Node.js at Scale  ](https://blog.risingstack.com/javascript-clean-coding-best-practices-node-js-at-scale/)https://blog.risingstack.com/javascript-clean-coding-best-practices-node-js-at-scale/
