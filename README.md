@@ -1,3 +1,7 @@
+# JS Coding Tasks + API CRUD Basics
+# Training during my first coding job
+# July 2022.
+
 **Count the Number of Arrays in an Array**  
 Write a function to count the number of arrays in a given array.
 countSubarrays([[1, 2, 3], [1, 2, 3], [1, 2, 3]]) ➞ 3
